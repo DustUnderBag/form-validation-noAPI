@@ -1,0 +1,41 @@
+.error-msg {
+  height: 1.2rem;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.form-row ~ .form-row {
+  margin-top: 12px;
+}
+
+.invalid {
+  color: red;
+}
+
+.valid {
+  color: green;
+}
+
+form {
+  width: 480px;
+  border: 1px solid black;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input,
+select,
+option {
+  width: 160px;
+  height: 2rem;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 5px 8px;
+}
+
+span.guide {
+  display: block;
+}
