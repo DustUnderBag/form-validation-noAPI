@@ -7,5 +7,42 @@
   </head>
   <body>
     <h1>Validate Form without Javascript API</h1>
+    <form action="#" novalidate>
+      <p class="form-row">
+        <label for="email">Email<span aria-label="label">*</span></label>
+        <input type="email" id="email" required />
+      </p>
+
+      <p class="form-row">
+        <label for="country">Country</label>
+        <select name="country" id="country" required>
+          <option value="ca">Canada</option>
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="fr">France</option>
+        </select>
+      </p>
+
+      <p class="form-row">
+        <label for="postal-code"
+          >Postal Code<span aria-label="label">*</span></label
+        >
+        <input type="text" id="postal-code" required />
+      </p>
+
+      <p class="form-row">
+        <label for="pwd">Password<span aria-label="label">*</span></label>
+        <input type="password" name="pwd" id="pwd" required />
+      </p>
+
+      <p class="form-row">
+        <label for="cfm-pwd"
+          >Confirm Password<span aria-label="label">*</span></label
+        >
+        <input type="password" name="cfm_pwd" id="cfm-pwd" required />
+      </p>
+
+      <button type="submit">Submit form</button>
+    </form>
   </body>
 </html>
