@@ -9,29 +9,40 @@ const postalCode = document.querySelector("#postal-code");
 const pwd = document.querySelector("#pwd");
 const cfmPwd = document.querySelector("#cfm-pwd");
 
-pwd.addEventListener("input", (e) => {
-  if (checkMinLength(e));
+pwd.addEventListener("input", pwdHandler);
+
+cfmPwd.addEventListener("input", () => {
+  const validty = isValidCfmPwds();
+  setValidityClass(cfmPwd, validty);
 });
 
-cfmPwd.addEventListener("input", (e) => {
-  matchPwds();
+email.addEventListener("input", () => {
+  const emailRegExp =
+    /^[a-zA-Z0-9!#$%^&*(){}:"|/_+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9]+)*$/;
+
+  const validity = isValidPattern(email, emailRegExp);
+  setValidityClass(email, validity);
 });
 
-function checkMinLength(e) {
-  const self = e.target;
-  const minlength = Number(self.getAttribute("minlength"));
+function pwdHandler() {
+  const validity = isValidMinLength(this);
+  setValidityClass(this, validity);
+}
 
-  if (self.value.length < minlength) {
-    self.setCustomValidity(`Must contain at least ${minlength} characters`);
-    self.reportValidity();
+function isValidMinLength(input) {
+  const minlength = Number(input.getAttribute("minlength"));
+
+  if (input.value.length < minlength) {
+    input.setCustomValidity(`Must contain at least ${minlength} characters`);
+    input.reportValidity();
     return false;
   }
 
-  self.setCustomValidity("");
+  input.setCustomValidity("");
   return true;
 }
 
-function matchPwds() {
+function isValidCfmPwds() {
   if (cfmPwd.value !== pwd.value) {
     cfmPwd.setCustomValidity("Password doesn't match");
     cfmPwd.reportValidity();
@@ -39,4 +50,18 @@ function matchPwds() {
   }
   cfmPwd.setCustomValidity("");
   return true;
+}
+
+function isValidPattern(input, regex) {
+  return regex.test(input.value);
+}
+
+function setValidityClass(input, validity) {
+  if (validity) {
+    input.classList.remove("invalid");
+    input.classList.add("valid");
+  } else {
+    input.classList.remove("valid");
+    input.classList.add("invalid");
+  }
 }
