@@ -24,6 +24,18 @@ email.addEventListener("input", () => {
   setValidityClass(email, validity);
 });
 
+const postalCode_patterns = {
+  ca: /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVXY][ -]\d[ABCEGHJKLMNPRSTVXY]\d$/i,
+  us: /^\d{5}(?:[-\s]\d{4})?$/,
+
+  //A[A]N[A/N]|AAA NAA
+  uk: /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]?/,
+
+  de: /^\d{5}$/,
+  fr: /^\d{5}$/,
+  jp: /^\d{3}(?:[-\s]\d{4})?$/,
+};
+
 function pwdHandler() {
   const validity = isValidMinLength(this);
   setValidityClass(this, validity);
