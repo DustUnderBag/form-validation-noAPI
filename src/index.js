@@ -24,17 +24,57 @@ email.addEventListener("input", () => {
   setValidityClass(email, validity);
 });
 
-const postalCode_patterns = {
-  ca: /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVXY][ -]\d[ABCEGHJKLMNPRSTVXY]\d$/i,
-  us: /^\d{5}(?:[-\s]\d{4})?$/,
+country.addEventListener("change", postalCode_handler);
 
-  //A[A]N[A/N]|AAA NAA
-  uk: /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]?/,
+postalCode.addEventListener("input", postalCode_handler);
+postalCode.addEventListener("change", reportPostalCode);
 
-  de: /^\d{5}$/,
-  fr: /^\d{5}$/,
-  jp: /^\d{3}(?:[-\s]\d{4})?$/,
-};
+function postalCode_handler() {
+  postalCode.setCustomValidity("");
+
+  const isValid = validatePostalCode();
+
+  setValidityClass(postalCode, isValid);
+}
+
+function reportPostalCode() {
+  const isValid = validatePostalCode();
+
+  if (!isValid) {
+    postalCode.setCustomValidity("The postal code format is incorrect");
+  } else {
+    postalCode.setCustomValidity("");
+  }
+
+  postalCode.reportValidity();
+}
+
+function validatePostalCode() {
+  const postalCode_patterns = {
+    //ANA NAN
+    //Excluded characters: D,F,I,O,Q,U
+    //1st character has NO: W, Z
+    ca: /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVWXYZ][-\s]\d[ABCEGHJKLMNPRSTVXYZ]\d$/i,
+
+    //NNNNN or NNNNN-NNNN
+    us: /^\d{5}(?:[-\s]\d{4})?$/,
+
+    //A[A]N[A/N]|AAA NAA
+    //2nd section has NO: C, I, K, M, O or V.
+    uk: /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[-\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]$/i,
+
+    //NNNNN
+    de: /^\d{5}$/,
+    fr: /^\d{5}$/,
+
+    //NNN OR NNN-NNNN
+    jp: /^\d{3}(?:[-\s]\d{4})?$/,
+  };
+
+  const pattern = postalCode_patterns[getSelectedCountry()];
+
+  return isValidPattern(postalCode, pattern);
+}
 
 function pwdHandler() {
   const validity = isValidMinLength(this);
@@ -76,4 +116,9 @@ function setValidityClass(input, validity) {
     input.classList.remove("valid");
     input.classList.add("invalid");
   }
+}
+
+function getSelectedCountry() {
+  const selectedIndex = country.options.selectedIndex;
+  return country[selectedIndex].value;
 }
