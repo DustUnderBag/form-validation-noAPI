@@ -79,15 +79,13 @@ updatePostalCodePlaceholder();
 function updatePostalCodePlaceholder() {
   const country = getSelectedCountry();
   postalCode.setAttribute("placeholder", postalCode_patterns[country][1]);
-
-  postalCode.classList.remove("valid");
-  postalCode.classList.remove("invalid");
-  postalCode.setCustomValidity("");
 }
 
 country.addEventListener("change", () => {
-  postalCode_handler();
   updatePostalCodePlaceholder();
+
+  //Validate only when the postal code isn't empty
+  if (postalCode.value.length !== 0) postalCode_handler();
 });
 
 postalCode.addEventListener("input", postalCode_handler);
