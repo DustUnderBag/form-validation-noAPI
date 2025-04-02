@@ -18,10 +18,11 @@ cfmPwd.addEventListener("input", () => {
 
 email.addEventListener("input", email_hander);
 email.addEventListener("change", () => {
-  email.setCustomValidity("");
-
   if (email.value.length === 0) {
     email.setCustomValidity("Email is required.");
+
+    //Set to invalid for missing value.
+    setValidityClass(email, false);
   }
 
   email.reportValidity();
@@ -46,54 +47,71 @@ function validateEmail() {
   return isValidPattern(email, emailRegExp);
 }
 
-country.addEventListener("change", postalCode_handler);
+const postalCode_patterns = {
+  //ANA NAN
+  //Excluded characters: D,F,I,O,Q,U
+  //1st character has NO: W, Z
+  ca: [
+    /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVWXYZ][-\s]\d[ABCEGHJKLMNPRSTVXYZ]\d$/i,
+    "M1P 2A1",
+  ],
 
-postalCode.addEventListener("input", postalCode_handler);
-postalCode.addEventListener("change", reportPostalCode);
+  //NNNNN or NNNNN-NNNN
+  us: [/^\d{5}(?:[-\s]\d{4})?$/, "12345 or 12345 1234"],
 
-function postalCode_handler() {
-  postalCode.setCustomValidity("");
+  //A[A]N[A/N]|AAA NAA
+  //2nd section has NO: C, I, K, M, O or V.
+  uk: [
+    /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[-\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]$/i,
+    "L2A 5NP",
+  ],
 
-  const isValid = validatePostalCode();
+  //NNNNN
+  de: [/^\d{5}$/, "12345"],
+  fr: [/^\d{5}$/, "12345"],
 
-  setValidityClass(postalCode, isValid);
+  //NNN OR NNN-NNNN
+  jp: [/^\d{3}(?:[-\s]\d{4})?$/, "123 or 123-1234"],
+};
+
+updatePostalCodePlaceholder();
+
+function updatePostalCodePlaceholder() {
+  const country = getSelectedCountry();
+  postalCode.setAttribute("placeholder", postalCode_patterns[country][1]);
 }
 
-function reportPostalCode() {
+country.addEventListener("change", () => {
+  postalCode_handler();
+  updatePostalCodePlaceholder();
+});
+
+postalCode.addEventListener("input", postalCode_handler);
+postalCode.addEventListener("change", () => {
+  if (postalCode.value.length === 0) {
+    postalCode.setCustomValidity("Postal code is required.");
+
+    //Set to invalid for missing value.
+    setValidityClass(postalCode, false);
+  }
+
+  postalCode.reportValidity();
+});
+
+function postalCode_handler() {
   const isValid = validatePostalCode();
 
-  if (!isValid) {
+  if (!isValid && postalCode.value.length !== 0) {
     postalCode.setCustomValidity("The postal code format is incorrect");
   } else {
     postalCode.setCustomValidity("");
   }
 
-  postalCode.reportValidity();
+  setValidityClass(postalCode, isValid);
 }
 
 function validatePostalCode() {
-  const postalCode_patterns = {
-    //ANA NAN
-    //Excluded characters: D,F,I,O,Q,U
-    //1st character has NO: W, Z
-    ca: /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVWXYZ][-\s]\d[ABCEGHJKLMNPRSTVXYZ]\d$/i,
-
-    //NNNNN or NNNNN-NNNN
-    us: /^\d{5}(?:[-\s]\d{4})?$/,
-
-    //A[A]N[A/N]|AAA NAA
-    //2nd section has NO: C, I, K, M, O or V.
-    uk: /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[-\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]$/i,
-
-    //NNNNN
-    de: /^\d{5}$/,
-    fr: /^\d{5}$/,
-
-    //NNN OR NNN-NNNN
-    jp: /^\d{3}(?:[-\s]\d{4})?$/,
-  };
-
-  const pattern = postalCode_patterns[getSelectedCountry()];
+  const pattern = postalCode_patterns[getSelectedCountry()][0];
 
   return isValidPattern(postalCode, pattern);
 }

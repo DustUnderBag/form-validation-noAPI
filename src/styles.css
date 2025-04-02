@@ -10,10 +10,12 @@
 
 .invalid {
   color: red;
+  border: 2px solid red;
 }
 
 .valid {
   color: green;
+  border: 2px solid green;
 }
 
 form {
