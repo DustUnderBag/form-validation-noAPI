@@ -79,6 +79,10 @@ updatePostalCodePlaceholder();
 function updatePostalCodePlaceholder() {
   const country = getSelectedCountry();
   postalCode.setAttribute("placeholder", postalCode_patterns[country][1]);
+
+  postalCode.classList.remove("valid");
+  postalCode.classList.remove("invalid");
+  postalCode.setCustomValidity("");
 }
 
 country.addEventListener("change", () => {
