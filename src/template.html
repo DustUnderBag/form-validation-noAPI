@@ -7,10 +7,10 @@
   </head>
   <body>
     <h1>Validate Form without Javascript API</h1>
-    <form action="#" novalidate>
+    <form action="#" novalidate autocomplete="off">
       <p class="form-row">
         <label for="email">Email<span aria-label="label"> *</span></label>
-        <input type="email" id="email" required />
+        <input type="email" id="email" placeholder="abc@example.com" required />
         <span class="guide">error</span>
       </p>
 
@@ -18,11 +18,11 @@
         <label for="country">Country</label>
         <select name="country" id="country" required>
           <option value="ca">Canada</option>
-          <option value="us" selected>United States</option>
-          <option value="uk">United Kingdom</option>
-          <option value="de">Germany</option>
           <option value="fr">France</option>
+          <option value="de">Germany</option>
           <option value="jp">Japan</option>
+          <option value="uk">United Kingdom</option>
+          <option value="us">United States</option>
         </select>
         <span class="guide">error</span>
       </p>

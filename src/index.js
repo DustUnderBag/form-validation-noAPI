@@ -16,13 +16,35 @@ cfmPwd.addEventListener("input", () => {
   setValidityClass(cfmPwd, validty);
 });
 
-email.addEventListener("input", () => {
+email.addEventListener("input", email_hander);
+email.addEventListener("change", () => {
+  email.setCustomValidity("");
+
+  if (email.value.length === 0) {
+    email.setCustomValidity("Email is required.");
+  }
+
+  email.reportValidity();
+});
+
+function email_hander() {
+  const validity = validateEmail();
+
+  if (!validity && email.value.length !== 0) {
+    email.setCustomValidity("Please enter valid email address.");
+  } else {
+    email.setCustomValidity("");
+  }
+
+  setValidityClass(email, validity);
+}
+
+function validateEmail() {
   const emailRegExp =
     /^[a-zA-Z0-9!#$%^&*(){}:"|/_+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9]+)*$/;
 
-  const validity = isValidPattern(email, emailRegExp);
-  setValidityClass(email, validity);
-});
+  return isValidPattern(email, emailRegExp);
+}
 
 country.addEventListener("change", postalCode_handler);
 
