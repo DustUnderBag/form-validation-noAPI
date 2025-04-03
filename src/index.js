@@ -20,11 +20,56 @@ const pwd = document.querySelector("#pwd");
 const cfmPwd = document.querySelector("#cfm-pwd");
 
 pwd.addEventListener("input", pwdHandler);
+pwd.addEventListener("change", () => {
+  if (pwd.value.length === 0) {
+    pwd.setCustomValidity("Password is required");
+
+    //Set to invalid for missing value.
+    setValidityClass(pwd, false);
+  }
+
+  pwd.reportValidity();
+});
 
 cfmPwd.addEventListener("input", () => {
   const validty = isValidCfmPwds();
+
+  if (!validty) {
+    cfmPwd.setCustomValidity("Password doesn't match");
+  } else {
+    cfmPwd.setCustomValidity("");
+  }
+
   setValidityClass(cfmPwd, validty);
 });
+
+cfmPwd.addEventListener("change", () => {
+  if (cfmPwd.value.length === 0) {
+    cfmPwd.setCustomValidity("Confirm Password is required");
+
+    //Set to invalid for missing value.
+    setValidityClass(cfmPwd, false);
+  }
+
+  cfmPwd.reportValidity();
+});
+
+function pwdHandler() {
+  const validity = isValidMinLength(this);
+
+  if (!validity) {
+    const minlength = Number(this.getAttribute("minlength"));
+    this.setCustomValidity(`Must contain at least ${minlength} characters`);
+  } else {
+    this.setCustomValidity("");
+  }
+
+  setValidityClass(this, validity);
+}
+
+function isValidCfmPwds() {
+  return cfmPwd.value === pwd.value;
+}
 
 email.addEventListener("input", email_hander);
 email.addEventListener("change", () => {
@@ -88,27 +133,4 @@ function postalCode_handler() {
   }
 
   setValidityClass(postalCode, isValid);
-}
-
-function pwdHandler() {
-  const validity = isValidMinLength(this);
-
-  if (!validity) {
-    const minlength = Number(this.getAttribute("minlength"));
-    this.setCustomValidity(`Must contain at least ${minlength} characters`);
-  } else {
-    this.setCustomValidity("");
-  }
-
-  setValidityClass(this, validity);
-}
-
-function isValidCfmPwds() {
-  if (cfmPwd.value !== pwd.value) {
-    cfmPwd.setCustomValidity("Password doesn't match");
-    cfmPwd.reportValidity();
-    return false;
-  }
-  cfmPwd.setCustomValidity("");
-  return true;
 }
