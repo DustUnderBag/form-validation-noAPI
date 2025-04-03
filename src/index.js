@@ -19,7 +19,7 @@ const postalCode = document.querySelector("#postal-code");
 const pwd = document.querySelector("#pwd");
 const cfmPwd = document.querySelector("#cfm-pwd");
 
-pwd.addEventListener("input", pwdHandler);
+pwd.addEventListener("input", pwd_handler);
 pwd.addEventListener("change", () => {
   if (pwd.value.length === 0) {
     pwd.setCustomValidity("Password is required");
@@ -31,18 +31,7 @@ pwd.addEventListener("change", () => {
   pwd.reportValidity();
 });
 
-cfmPwd.addEventListener("input", () => {
-  const validty = isValidCfmPwds();
-
-  if (!validty) {
-    cfmPwd.setCustomValidity("Password doesn't match");
-  } else {
-    cfmPwd.setCustomValidity("");
-  }
-
-  setValidityClass(cfmPwd, validty);
-});
-
+cfmPwd.addEventListener("input", cfmPwd_handler);
 cfmPwd.addEventListener("change", () => {
   if (cfmPwd.value.length === 0) {
     cfmPwd.setCustomValidity("Confirm Password is required");
@@ -54,7 +43,7 @@ cfmPwd.addEventListener("change", () => {
   cfmPwd.reportValidity();
 });
 
-function pwdHandler() {
+function pwd_handler() {
   const validity = isValidMinLength(this);
 
   if (!validity) {
@@ -65,10 +54,25 @@ function pwdHandler() {
   }
 
   setValidityClass(this, validity);
+
+  //Validate confirm password at the same time.
+  cfmPwd_handler();
 }
 
 function isValidCfmPwds() {
   return cfmPwd.value === pwd.value;
+}
+
+function cfmPwd_handler() {
+  const validty = isValidCfmPwds();
+
+  if (!validty) {
+    cfmPwd.setCustomValidity("Passwords do NOT match");
+  } else {
+    cfmPwd.setCustomValidity("");
+  }
+
+  setValidityClass(cfmPwd, validty);
 }
 
 email.addEventListener("input", email_hander);
