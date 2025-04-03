@@ -19,6 +19,8 @@ const postalCode = document.querySelector("#postal-code");
 const pwd = document.querySelector("#pwd");
 const cfmPwd = document.querySelector("#cfm-pwd");
 
+updatePostalCodePlaceholder();
+
 pwd.addEventListener("input", pwd_handler);
 pwd.addEventListener("change", () => {
   if (pwd.value.length === 0) {
@@ -105,8 +107,6 @@ function validateEmail() {
 
   return isValidPattern(email, emailRegExp);
 }
-
-updatePostalCodePlaceholder();
 
 country.addEventListener("change", () => {
   updatePostalCodePlaceholder();

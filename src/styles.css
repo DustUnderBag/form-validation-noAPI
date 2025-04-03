@@ -40,4 +40,6 @@ option {
 
 span.guide {
   display: block;
+  height: 1rem;
+  padding-block: 2px;
 }

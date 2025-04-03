@@ -43,7 +43,10 @@ function validatePostalCode() {
 
 function updatePostalCodePlaceholder() {
   const country = getSelectedCountry();
-  postalCode.setAttribute("placeholder", postalCode_patterns[country][1]);
+  postalCode.setAttribute(
+    "placeholder",
+    "e.g. " + postalCode_patterns[country][1],
+  );
 }
 
 export { validatePostalCode, updatePostalCodePlaceholder };
