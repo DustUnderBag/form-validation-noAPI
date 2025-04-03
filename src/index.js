@@ -1,6 +1,16 @@
 import "./reset.css";
 import "./styles.css";
 
+import {
+  validatePostalCode,
+  updatePostalCodePlaceholder,
+} from "./postalCode-validator";
+import {
+  isValidPattern,
+  setValidityClass,
+  isValidMinLength,
+} from "./validation-utils";
+
 console.log("Script entry point working");
 
 const email = document.querySelector("#email");
@@ -47,39 +57,7 @@ function validateEmail() {
   return isValidPattern(email, emailRegExp);
 }
 
-const postalCode_patterns = {
-  //ANA NAN
-  //Excluded characters: D,F,I,O,Q,U
-  //1st character has NO: W, Z
-  ca: [
-    /^[ABCEGHJKLMNPRSTVXY]\d[[ABCEGHJKLMNPRSTVWXYZ][-\s]\d[ABCEGHJKLMNPRSTVXYZ]\d$/i,
-    "M1P 2A1",
-  ],
-
-  //NNNNN or NNNNN-NNNN
-  us: [/^\d{5}(?:[-\s]\d{4})?$/, "12345 or 12345 1234"],
-
-  //A[A]N[A/N]|AAA NAA
-  //2nd section has NO: C, I, K, M, O or V.
-  uk: [
-    /^([A-Z][A-Z]?\d[A-Z0-9]?|[A-Z]{3})[-\s]\d[ABDEFGHJLNPQRSTUWWYZ][ABDEFGHJLNPQRSTUWWYZ]$/i,
-    "L2A 5NP",
-  ],
-
-  //NNNNN
-  de: [/^\d{5}$/, "12345"],
-  fr: [/^\d{5}$/, "12345"],
-
-  //NNN OR NNN-NNNN
-  jp: [/^\d{3}(?:[-\s]\d{4})?$/, "123 or 123-1234"],
-};
-
 updatePostalCodePlaceholder();
-
-function updatePostalCodePlaceholder() {
-  const country = getSelectedCountry();
-  postalCode.setAttribute("placeholder", postalCode_patterns[country][1]);
-}
 
 country.addEventListener("change", () => {
   updatePostalCodePlaceholder();
@@ -112,28 +90,17 @@ function postalCode_handler() {
   setValidityClass(postalCode, isValid);
 }
 
-function validatePostalCode() {
-  const pattern = postalCode_patterns[getSelectedCountry()][0];
-
-  return isValidPattern(postalCode, pattern);
-}
-
 function pwdHandler() {
   const validity = isValidMinLength(this);
-  setValidityClass(this, validity);
-}
 
-function isValidMinLength(input) {
-  const minlength = Number(input.getAttribute("minlength"));
-
-  if (input.value.length < minlength) {
-    input.setCustomValidity(`Must contain at least ${minlength} characters`);
-    input.reportValidity();
-    return false;
+  if (!validity) {
+    const minlength = Number(this.getAttribute("minlength"));
+    this.setCustomValidity(`Must contain at least ${minlength} characters`);
+  } else {
+    this.setCustomValidity("");
   }
 
-  input.setCustomValidity("");
-  return true;
+  setValidityClass(this, validity);
 }
 
 function isValidCfmPwds() {
@@ -144,23 +111,4 @@ function isValidCfmPwds() {
   }
   cfmPwd.setCustomValidity("");
   return true;
-}
-
-function isValidPattern(input, regex) {
-  return regex.test(input.value);
-}
-
-function setValidityClass(input, validity) {
-  if (validity) {
-    input.classList.remove("invalid");
-    input.classList.add("valid");
-  } else {
-    input.classList.remove("valid");
-    input.classList.add("invalid");
-  }
-}
-
-function getSelectedCountry() {
-  const selectedIndex = country.options.selectedIndex;
-  return country[selectedIndex].value;
 }
