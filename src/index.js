@@ -23,7 +23,7 @@ updatePostalCodePlaceholder();
 
 pwd.addEventListener("input", pwd_handler);
 pwd.addEventListener("change", () => {
-  if (pwd.value.length === 0) {
+  if (pwd.validity.valueMissing) {
     pwd.setCustomValidity("Password is required");
 
     //Set to invalid for missing value.
@@ -35,7 +35,7 @@ pwd.addEventListener("change", () => {
 
 cfmPwd.addEventListener("input", cfmPwd_handler);
 cfmPwd.addEventListener("change", () => {
-  if (cfmPwd.value.length === 0) {
+  if (cfmPwd.validity.valueMissing) {
     cfmPwd.setCustomValidity("Confirm Password is required");
 
     //Set to invalid for missing value.
@@ -46,19 +46,26 @@ cfmPwd.addEventListener("change", () => {
 });
 
 function pwd_handler() {
-  const validity = isValidMinLength(this);
+  const validity = validatePwd();
 
   if (!validity) {
-    const minlength = Number(this.getAttribute("minlength"));
-    this.setCustomValidity(`Must contain at least ${minlength} characters`);
+    const minlength = Number(pwd.getAttribute("minlength"));
+    pwd.setCustomValidity(`Must contain at least ${minlength} characters`);
   } else {
-    this.setCustomValidity("");
+    pwd.setCustomValidity("");
   }
 
-  setValidityClass(this, validity);
+  setValidityClass(pwd, validity);
 
   //Validate confirm password at the same time.
-  cfmPwd_handler();
+  if (!cfmPwd.validity.valueMissing) cfmPwd_handler();
+}
+
+function validatePwd() {
+  const pattern = /^[0-9a-zA-Z]{8,}$/;
+  const validPattern = isValidPattern(pwd, pattern);
+
+  return validPattern;
 }
 
 function isValidCfmPwds() {
@@ -68,7 +75,7 @@ function isValidCfmPwds() {
 function cfmPwd_handler() {
   const validty = isValidCfmPwds();
 
-  if (!validty) {
+  if (!validty && cfmPwd.value.length !== 0) {
     cfmPwd.setCustomValidity("Passwords do NOT match");
   } else {
     cfmPwd.setCustomValidity("");
@@ -77,7 +84,7 @@ function cfmPwd_handler() {
   setValidityClass(cfmPwd, validty);
 }
 
-email.addEventListener("input", email_hander);
+email.addEventListener("input", email_handler);
 email.addEventListener("change", () => {
   if (email.value.length === 0) {
     email.setCustomValidity("Email is required.");
@@ -89,7 +96,7 @@ email.addEventListener("change", () => {
   email.reportValidity();
 });
 
-function email_hander() {
+function email_handler() {
   const validity = validateEmail();
 
   if (!validity && email.value.length !== 0) {
@@ -138,3 +145,26 @@ function postalCode_handler() {
 
   setValidityClass(postalCode, isValid);
 }
+
+/*
+form.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const inputs = document.querySelectorAll("input");
+  for(const input of inputs) {
+    if(input.value.length === 0) {
+      input.setCustomValidity("This field is required");
+      input.reportValidity();
+      return;
+    } else {
+      input.setCustomValidity("");
+    }
+  }
+
+  email_handler();
+  postalCode_handler();
+  pwd_handler();
+  cfmPwd_handler();
+});
+
+*/

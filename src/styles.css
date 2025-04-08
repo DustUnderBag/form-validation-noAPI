@@ -31,7 +31,7 @@ form {
 input,
 select,
 option {
-  width: 160px;
+  width: 180px;
   height: 2rem;
   font-size: 1rem;
   line-height: 1;
@@ -39,7 +39,12 @@ option {
 }
 
 span.guide {
+  width: 180px;
+  line-height: 1;
   display: block;
-  height: 1rem;
   padding-block: 2px;
+  font-size: 0.8rem;
+
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
