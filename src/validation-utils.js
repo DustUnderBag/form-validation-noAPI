@@ -12,9 +12,4 @@ function setValidityClass(input, validity) {
   }
 }
 
-function isValidMinLength(input) {
-  const minlength = Number(input.getAttribute("minlength"));
-  return input.value.length >= minlength;
-}
-
-export { isValidPattern, setValidityClass, isValidMinLength };
+export { isValidPattern, setValidityClass };

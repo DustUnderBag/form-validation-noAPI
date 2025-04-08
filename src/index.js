@@ -5,11 +5,8 @@ import {
   validatePostalCode,
   updatePostalCodePlaceholder,
 } from "./postalCode-validator";
-import {
-  isValidPattern,
-  setValidityClass,
-  isValidMinLength,
-} from "./validation-utils";
+
+import { isValidPattern, setValidityClass } from "./validation-utils";
 
 console.log("Script entry point working");
 
@@ -62,10 +59,25 @@ function pwd_handler() {
 }
 
 function validatePwd() {
-  const pattern = /^[0-9a-zA-Z]{8,}$/;
-  const validPattern = isValidPattern(pwd, pattern);
+  //Min length
+  const validLength = pwd.value.length >= 8;
 
-  return validPattern;
+  //Password must contain at least 1
+  //- lowercase, uppercase letters,
+  //- numbers, and
+  //- special characters.
+  const lowercaseLetters = /[a-z]/;
+  const uppercaseLetters = /[A-Z]/;
+  const numbers = /[0-9]/;
+  const symbols = /[!@#$%^&&*()_=-]/;
+
+  const hasRequiredChars =
+    lowercaseLetters.test(pwd.value) &&
+    uppercaseLetters.test(pwd.value) &&
+    numbers.test(pwd.value) &&
+    symbols.test(pwd.value);
+
+  return validLength && hasRequiredChars;
 }
 
 function isValidCfmPwds() {
