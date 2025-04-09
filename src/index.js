@@ -10,6 +10,9 @@ import { isValidPattern, setValidityClass } from "./validation-utils";
 
 console.log("Script entry point working");
 
+const form = document.querySelector("form");
+const submitBtn = document.querySelector("button#submit");
+
 const email = document.querySelector("#email");
 const country = document.querySelector("#country");
 const postalCode = document.querySelector("#postal-code");
@@ -43,44 +46,48 @@ cfmPwd.addEventListener("change", () => {
 });
 
 function pwd_handler() {
-  const validity = validatePwd();
+  //Validate confirm password at the same time.
+  if (cfmPwd.value.length !== 0) cfmPwd_handler();
 
-  if (!validity) {
+  if (pwd.value.length < 8) {
     const minlength = Number(pwd.getAttribute("minlength"));
-    pwd.setCustomValidity(`Must contain at least ${minlength} characters`);
-  } else {
-    pwd.setCustomValidity("");
+    pwd.setCustomValidity(`Must enter at least ${minlength} characters`);
+    setValidityClass(pwd, false);
+    return;
   }
 
-  setValidityClass(pwd, validity);
+  if (!hasRequiredCharacters()) {
+    pwd.setCustomValidity(
+      "Must contain lowercase and uppercase letters, numbers, and symbols",
+    );
+    setValidityClass(pwd, false);
+    return;
+  }
 
-  //Validate confirm password at the same time.
-  if (!cfmPwd.validity.valueMissing) cfmPwd_handler();
+  pwd.setCustomValidity("");
+  setValidityClass(pwd, true);
+  return;
 }
 
-function validatePwd() {
-  //Min length
-  const validLength = pwd.value.length >= 8;
+function hasRequiredCharacters() {
+  //To test if password contains these required character classes.
 
-  //Password must contain at least 1
-  //- lowercase, uppercase letters,
-  //- numbers, and
-  //- special characters.
-  const lowercaseLetters = /[a-z]/;
-  const uppercaseLetters = /[A-Z]/;
-  const numbers = /[0-9]/;
-  const symbols = /[!@#$%^&&*()_=-]/;
+  //Lowercase & uppercase english letters,
+  if (!/[a-z]/.test(pwd.value)) return false;
+  if (!/[A-Z]/.test(pwd.value)) return false;
 
-  const hasRequiredChars =
-    lowercaseLetters.test(pwd.value) &&
-    uppercaseLetters.test(pwd.value) &&
-    numbers.test(pwd.value) &&
-    symbols.test(pwd.value);
+  //Numbers
+  if (!/[0-9]/.test(pwd.value)) return false;
 
-  return validLength && hasRequiredChars;
+  //Special characters
+  if (!/[!@#$%^&&*()_=-]/.test(pwd.value)) return false;
+
+  return true;
 }
 
 function isValidCfmPwds() {
+  if (cfmPwd.validity.valueMissing) return false;
+
   return cfmPwd.value === pwd.value;
 }
 
@@ -158,16 +165,16 @@ function postalCode_handler() {
   setValidityClass(postalCode, isValid);
 }
 
-/*
-form.addEventListener("submit", e => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const inputs = document.querySelectorAll("input");
-  for(const input of inputs) {
-    if(input.value.length === 0) {
+
+  for (const input of inputs) {
+    if (input.validity.valueMissing) {
       input.setCustomValidity("This field is required");
+      setValidityClass(input, false);
       input.reportValidity();
-      return;
     } else {
       input.setCustomValidity("");
     }
@@ -178,5 +185,3 @@ form.addEventListener("submit", e => {
   pwd_handler();
   cfmPwd_handler();
 });
-
-*/
