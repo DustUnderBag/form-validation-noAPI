@@ -170,15 +170,21 @@ form.addEventListener("submit", (e) => {
 
   const inputs = document.querySelectorAll("input");
 
-  for (const input of inputs) {
-    if (input.validity.valueMissing) {
-      input.setCustomValidity("This field is required");
-      setValidityClass(input, false);
-      input.reportValidity();
+  let firstInvalidInput = undefined;
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].validity.valueMissing) {
+      //Remember the first invalid input's index number.
+      if (firstInvalidInput === undefined) firstInvalidInput = inputs[i];
+
+      inputs[i].setCustomValidity("This field is required");
+      setValidityClass(inputs[i], false);
+      inputs[i].reportValidity();
     } else {
-      input.setCustomValidity("");
+      inputs[i].setCustomValidity("");
     }
   }
+  //Report validity if first invalid input is captured.
+  if (firstInvalidInput) firstInvalidInput.reportValidity();
 
   email_handler();
   postalCode_handler();
