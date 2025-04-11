@@ -184,10 +184,20 @@ form.addEventListener("submit", (e) => {
     }
   }
   //Report validity if first invalid input is captured.
-  if (firstInvalidInput) firstInvalidInput.reportValidity();
+  if (firstInvalidInput) {
+    firstInvalidInput.reportValidity();
+    return;
+  }
 
   email_handler();
+  email.reportValidity();
+
   postalCode_handler();
+  postalCode.reportValidity();
+
   pwd_handler();
+  pwd.reportValidity();
+
   cfmPwd_handler();
+  cfmPwd.reportValidity();
 });
