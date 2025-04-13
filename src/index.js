@@ -49,24 +49,29 @@ function pwd_handler() {
   //Validate confirm password at the same time.
   if (cfmPwd.value.length !== 0) cfmPwd_handler();
 
+  const validity = validatePwd();
+  setValidityClass(pwd, validity);
+}
+
+function validatePwd() {
+  //Skip if pwd is empty.
+  if (pwd.validity.valueMissing) return;
+
   if (pwd.value.length < 8) {
     const minlength = Number(pwd.getAttribute("minlength"));
     pwd.setCustomValidity(`Must enter at least ${minlength} characters`);
-    setValidityClass(pwd, false);
-    return;
+    return false;
   }
 
   if (!hasRequiredCharacters()) {
     pwd.setCustomValidity(
       "Must contain lowercase and uppercase letters, numbers, and symbols",
     );
-    setValidityClass(pwd, false);
-    return;
+    return false;
   }
 
   pwd.setCustomValidity("");
-  setValidityClass(pwd, true);
-  return;
+  return true;
 }
 
 function hasRequiredCharacters() {
