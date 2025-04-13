@@ -11,7 +11,6 @@ import { isValidPattern, setValidityClass } from "./validation-utils";
 console.log("Script entry point working");
 
 const form = document.querySelector("form");
-const submitBtn = document.querySelector("button#submit");
 
 const email = document.querySelector("#email");
 const country = document.querySelector("#country");

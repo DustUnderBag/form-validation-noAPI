@@ -8,16 +8,6 @@
   margin-top: 12px;
 }
 
-.invalid {
-  color: red;
-  border: 2px solid red;
-}
-
-.valid {
-  color: green;
-  border: 2px solid green;
-}
-
 form {
   width: 480px;
   border: 1px solid black;
@@ -38,6 +28,9 @@ option {
   font-size: 1rem;
   line-height: 1;
   padding: 5px 8px;
+
+  color: #000;
+  border: 1px solid #000;
 }
 
 span.guide {
@@ -49,4 +42,16 @@ span.guide {
 
   margin-top: 5px;
   margin-bottom: 10px;
+}
+
+input.invalid,
+input:user-invalid {
+  color: red;
+  border: 2px solid red;
+}
+
+input.valid,
+input:user-valid {
+  color: green;
+  border: 2px solid green;
 }
