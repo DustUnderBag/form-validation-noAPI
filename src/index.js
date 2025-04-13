@@ -75,37 +75,38 @@ function validatePwd() {
 }
 
 function hasRequiredCharacters() {
-  //To test if password contains these required character classes.
+  //To test if password contains these required character types.
+  //- Lowercase & Uppercase Letters, Numbers, & Special characters.
 
-  //Lowercase & uppercase english letters,
-  if (!/[a-z]/.test(pwd.value)) return false;
-  if (!/[A-Z]/.test(pwd.value)) return false;
+  const requiredCharTypes = [/[a-z]/, /[A-Z]/, /[0-9]/, /[!@#$%^&&*()_=-]/];
 
-  //Numbers
-  if (!/[0-9]/.test(pwd.value)) return false;
+  for (const charType of requiredCharTypes) {
+    //Only return false if any test fails.
+    if (!charType.test(pwd.value)) return false;
+  }
 
-  //Special characters
-  if (!/[!@#$%^&&*()_=-]/.test(pwd.value)) return false;
-
+  //Return true if all tests pass.
   return true;
 }
 
-function isValidCfmPwds() {
-  if (cfmPwd.validity.valueMissing) return false;
-
-  return cfmPwd.value === pwd.value;
+function cfmPwd_handler() {
+  const validty = validateCfmPwd();
+  setValidityClass(cfmPwd, validty);
 }
 
-function cfmPwd_handler() {
-  const validty = isValidCfmPwds();
+function validateCfmPwd() {
+  //Skip if cfmPwd is empty.
+  if (cfmPwd.validity.valueMissing) return;
 
-  if (!validty && cfmPwd.value.length !== 0) {
-    cfmPwd.setCustomValidity("Passwords do NOT match");
+  const validity = cfmPwd.value === pwd.value;
+
+  if (!validity) {
+    cfmPwd.setCustomValidity("Passwords do not match");
+    return false;
   } else {
     cfmPwd.setCustomValidity("");
+    return true;
   }
-
-  setValidityClass(cfmPwd, validty);
 }
 
 email.addEventListener("input", email_handler);
