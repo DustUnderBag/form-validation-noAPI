@@ -117,21 +117,25 @@ email.addEventListener("change", () => {
 
 function email_handler() {
   const validity = validateEmail();
-
-  if (!validity && email.value.length !== 0) {
-    email.setCustomValidity("Please enter valid email address.");
-  } else {
-    email.setCustomValidity("");
-  }
-
   setValidityClass(email, validity);
 }
 
 function validateEmail() {
+  //Don't validate if it is empty.
+  if (email.validity.valueMissing) return;
+
   const emailRegExp =
     /^[a-zA-Z0-9!#$%^&*(){}:"|/_+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9]+)*$/;
 
-  return isValidPattern(email, emailRegExp);
+  const validity = isValidPattern(email, emailRegExp);
+
+  if (!validity) {
+    email.setCustomValidity("Please enter valid email address.");
+    return false;
+  } else {
+    email.setCustomValidity("");
+    return true;
+  }
 }
 
 country.addEventListener("change", () => {
