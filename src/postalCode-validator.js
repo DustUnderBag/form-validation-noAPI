@@ -36,9 +36,20 @@ function getSelectedCountry() {
 }
 
 function validatePostalCode() {
+  //Skip if postal code is empty.
+  if (postalCode.validity.valueMissing) return;
+
   const pattern = postalCode_patterns[getSelectedCountry()][0];
 
-  return isValidPattern(postalCode, pattern);
+  const validity = isValidPattern(postalCode, pattern);
+
+  if (!validity) {
+    postalCode.setCustomValidity("The postal code format is incorrect");
+    return false;
+  } else {
+    postalCode.setCustomValidity("");
+    return true;
+  }
 }
 
 function updatePostalCodePlaceholder() {

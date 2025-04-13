@@ -158,15 +158,8 @@ postalCode.addEventListener("change", () => {
 });
 
 function postalCode_handler() {
-  const isValid = validatePostalCode();
-
-  if (!isValid && postalCode.value.length !== 0) {
-    postalCode.setCustomValidity("The postal code format is incorrect");
-  } else {
-    postalCode.setCustomValidity("");
-  }
-
-  setValidityClass(postalCode, isValid);
+  const validity = validatePostalCode();
+  setValidityClass(postalCode, validity);
 }
 
 form.addEventListener("submit", (e) => {
