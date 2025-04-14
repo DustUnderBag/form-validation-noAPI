@@ -185,6 +185,7 @@ form.addEventListener("submit", (e) => {
       inputs[i].setCustomValidity("");
     }
   }
+
   //Report validity if first invalid input is captured.
   if (firstInvalidInput) {
     firstInvalidInput.reportValidity();
@@ -192,14 +193,26 @@ form.addEventListener("submit", (e) => {
   }
 
   email_handler();
-  email.reportValidity();
+  if (email.validationMessage) {
+    email.reportValidity();
+    return;
+  }
 
   postalCode_handler();
-  postalCode.reportValidity();
+  if (postalCode.validationMessage) {
+    postalCode.reportValidity();
+    return;
+  }
 
   pwd_handler();
-  pwd.reportValidity();
+  if (pwd.validationMessage) {
+    pwd.reportValidity();
+    return;
+  }
 
   cfmPwd_handler();
-  cfmPwd.reportValidity();
+  if (cfmPwd.validationMessage) {
+    cfmPwd.reportValidity();
+    return;
+  }
 });

@@ -44,14 +44,14 @@ span.guide {
   margin-bottom: 10px;
 }
 
-input.invalid,
-input:user-invalid {
-  color: red;
-  border: 2px solid red;
-}
-
-input.valid,
-input:user-valid {
+input:user-valid,
+input.valid {
   color: green;
   border: 2px solid green;
+}
+
+input:user-invalid,
+input.invalid {
+  color: red;
+  border: 2px solid red;
 }
